@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from './Calendar';
-import { getWeekendDatesInRange, formatDate, isWeekend } from '../../utils/dateUtils';
+import { getWeekendDatesInRange, formatDate } from '../../utils/dateUtils';
 import styles from '../../styles/DateRangePicker.module.css';
 
 interface PredefinedRange {
@@ -23,6 +23,8 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
     if (predefinedRange) {
       setStartDate(predefinedRange[0]);
       setEndDate(predefinedRange[1]);
+      setCurrentMonth(predefinedRange[0].getMonth());
+      setCurrentYear(predefinedRange[0].getFullYear());
       const weekendDates = getWeekendDatesInRange(predefinedRange[0], predefinedRange[1]);
       onChange(predefinedRange, weekendDates);
     } else {
@@ -30,10 +32,13 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
         setStartDate(date);
         setEndDate(null);
       } else if (startDate && !endDate) {
-        if (date >= startDate && !isWeekend(date)) {
+        if (date >= startDate) {
           setEndDate(date);
           const weekendDates = getWeekendDatesInRange(startDate, date);
           onChange([startDate, date], weekendDates);
+        } else {
+          setStartDate(date);
+          setEndDate(null);
         }
       }
     }
@@ -46,7 +51,7 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
 
   return (
     <div>
-      <h1 className={styles.header}>Date Range Picker</h1> {/* Header moved outside the main container */}
+      <h1 className={styles.header}>Date Range Picker</h1>
       <div className={styles.dateRangePicker}>
         <h2>Select Weekday Date Range</h2>
         <Calendar

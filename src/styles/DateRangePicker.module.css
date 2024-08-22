@@ -1,6 +1,6 @@
 /* src/styles/DateRangePicker.module.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 .header {
   font-size: 28px;
@@ -8,7 +8,7 @@
   color: #34495e;
   text-align: center;
   margin-bottom: 20px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .dateRangePicker {
@@ -21,7 +21,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   max-width: 370px; /* Increased width slightly to fit the grid */
   margin: 0 auto;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .calendar {
@@ -87,7 +87,8 @@
   background-color: #ffffff;
   border: 1px solid #ecf0f1;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .day:hover {
@@ -102,12 +103,13 @@
 }
 
 .selected {
-  background-color: #1abc9c;
+  background-color: #1abc9c; /* The color you want for selected dates */
   color: white;
   border: 2px solid #16a085;
   transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .predefinedRanges {
   display: flex;
