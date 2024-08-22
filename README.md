@@ -21,7 +21,7 @@ A React and TypeScript component for selecting a range of weekdays, with options
    ```bash
    npm install
    ```
-   
+
 3. Run the development server:
    ```bash
    npm start
@@ -44,6 +44,7 @@ function App() {
 }
 
 export default App;
+
 
 ---
 
