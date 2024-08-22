@@ -1,7 +1,8 @@
 // src/components/DateRangePicker/Calendar.tsx
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { isWeekend, daysInMonth } from '../../utils/dateUtils';
 import styles from '../../styles/DateRangePicker.module.css';
+import Day from './Day';
 
 interface CalendarProps {
   startDate: Date | null;
@@ -16,12 +17,30 @@ function Calendar({ startDate, endDate, onDateChange }: CalendarProps) {
 
   const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  function isSelected(date: Date) {
+  const handleMonthChange = useCallback(function (offset: number) {
+    setCurrentMonth(function (prevMonth) {
+      let newMonth = prevMonth + offset;
+      if (newMonth < 0) {
+        newMonth = 11;
+        setCurrentYear(function (prevYear) {
+          return prevYear - 1;
+        });
+      } else if (newMonth > 11) {
+        newMonth = 0;
+        setCurrentYear(function (prevYear) {
+          return prevYear + 1;
+        });
+      }
+      return newMonth;
+    });
+  }, []);
+
+  const isSelected = useCallback(function (date: Date) {
     if (!startDate || !endDate) return false;
     return date >= startDate && date <= endDate;
-  }
+  }, [startDate, endDate]);
 
-  function renderDays() {
+  const renderDays = useMemo(function () {
     const numberOfDays = daysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const startDayOffset = (firstDayOfMonth + 6) % 7; // Align Monday as 0, Sunday as 6
@@ -40,36 +59,35 @@ function Calendar({ startDate, endDate, onDateChange }: CalendarProps) {
       const isCurrentDaySelected = isSelected(date);
 
       days.push(
-        <div
+        <Day
           key={i}
-          className={`${styles.day} ${isCurrentDayWeekend ? styles.weekend : ''} ${isCurrentDaySelected ? styles.selected : ''}`}
+          date={date}
+          isSelected={isCurrentDaySelected}
+          isWeekend={isCurrentDayWeekend}
           onClick={() => !isCurrentDayWeekend && onDateChange(date)}
-          style={{ cursor: isCurrentDayWeekend ? 'not-allowed' : 'pointer' }}
-        >
-          {i}
-        </div>
+        />
       );
     }
     return days;
-  }
+  }, [currentMonth, currentYear, isSelected, onDateChange]);
 
   return (
     <div className={styles.calendar}>
       <div className={styles.calendarHeader}>
-        <button onClick={() => setCurrentMonth(currentMonth - 1)}>&lt;</button>
+        <button onClick={() => handleMonthChange(-1)}>&lt;</button>
         <span>{`${currentMonth + 1} / ${currentYear}`}</span>
-        <button onClick={() => setCurrentMonth(currentMonth + 1)}>&gt;</button>
+        <button onClick={() => handleMonthChange(1)}>&gt;</button>
       </div>
       <div className={styles.weekdayLabels}>
-        {daysOfWeek.map((day, index) => (
-          <div key={index} className={styles.weekdayLabel}>
-            {day}
-          </div>
-        ))}
+        {daysOfWeek.map(function (day, index) {
+          return (
+            <div key={index} className={styles.weekdayLabel}>
+              {day}
+            </div>
+          );
+        })}
       </div>
-      <div className={styles.calendarGrid}>
-        {renderDays()}
-      </div>
+      <div className={styles.calendarGrid}>{renderDays}</div>
     </div>
   );
 }
