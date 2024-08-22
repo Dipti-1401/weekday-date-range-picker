@@ -16,10 +16,12 @@ A React and TypeScript component for selecting a range of weekdays, with options
    git clone https://github.com/Dipti-1401/weekday-date-range-picker.git
    cd weekday-date-range-picker
    ```
+
 2. Install dependencies:
    ```bash
    npm install
    ```
+   
 3. Run the development server:
    ```bash
    npm start
@@ -42,8 +44,6 @@ function App() {
 }
 
 export default App;
-```
-
 
 ---
 
