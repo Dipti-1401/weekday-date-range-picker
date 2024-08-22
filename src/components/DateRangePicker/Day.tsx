@@ -1,4 +1,3 @@
-// src/components/DateRangePicker/Day.tsx
 import React from 'react';
 import styles from '../../styles/DateRangePicker.module.css';
 
@@ -12,15 +11,18 @@ interface DayProps {
 function Day({ date, isSelected, isWeekend, onClick }: DayProps) {
   return (
     <div
-      className={`${styles.day} ${isWeekend ? styles.weekend : ''} ${isSelected ? styles.selected : ''}`}
+      className={`${styles.day} ${isSelected ? styles.selected : ''} ${isWeekend ? styles.weekend : ''}`}
       onClick={onClick}
-      style={{ cursor: isWeekend ? 'not-allowed' : 'pointer' }}
+      style={{
+        cursor: isWeekend ? 'not-allowed' : 'pointer',
+      }}
       role="button"
       aria-selected={isSelected}
+      tabIndex={0}
     >
       {date.getDate()}
     </div>
   );
 }
 
-export default Day;
+export default React.memo(Day);

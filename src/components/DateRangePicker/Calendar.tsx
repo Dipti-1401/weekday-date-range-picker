@@ -1,5 +1,4 @@
-// src/components/DateRangePicker/Calendar.tsx
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { isWeekend, daysInMonth } from '../../utils/dateUtils';
 import styles from '../../styles/DateRangePicker.module.css';
 import Day from './Day';
@@ -8,44 +7,41 @@ interface CalendarProps {
   startDate: Date | null;
   endDate: Date | null;
   onDateChange: (date: Date) => void;
+  currentMonth: number;
+  currentYear: number;
+  onMonthYearChange: (month: number, year: number) => void;
 }
 
-function Calendar({ startDate, endDate, onDateChange }: CalendarProps) {
-  const today = new Date();
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+function Calendar({ startDate, endDate, onDateChange, currentMonth, currentYear, onMonthYearChange }: CalendarProps) {
+  const daysOfWeek = useMemo(() => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], []);
 
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const handleMonthChange = useCallback((offset: number) => {
+    let newMonth = currentMonth + offset;
+    let newYear = currentYear;
+    if (newMonth < 0) {
+      newMonth = 11;
+      newYear -= 1;
+    } else if (newMonth > 11) {
+      newMonth = 0;
+      newYear += 1;
+    }
+    onMonthYearChange(newMonth, newYear);
+  }, [currentMonth, currentYear, onMonthYearChange]);
 
-  const handleMonthChange = useCallback(function (offset: number) {
-    setCurrentMonth(function (prevMonth) {
-      let newMonth = prevMonth + offset;
-      if (newMonth < 0) {
-        newMonth = 11;
-        setCurrentYear(function (prevYear) {
-          return prevYear - 1;
-        });
-      } else if (newMonth > 11) {
-        newMonth = 0;
-        setCurrentYear(function (prevYear) {
-          return prevYear + 1;
-        });
-      }
-      return newMonth;
-    });
-  }, []);
+  const isSelected = useCallback(
+    (date: Date) => {
+      if (!startDate || !endDate) return false;
+      return date >= startDate && date <= endDate;
+    },
+    [startDate, endDate]
+  );
 
-  const isSelected = useCallback(function (date: Date) {
-    if (!startDate || !endDate) return false;
-    return date >= startDate && date <= endDate;
-  }, [startDate, endDate]);
-
-  const renderDays = useMemo(function () {
+  const renderDays = useMemo(() => {
     const numberOfDays = daysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const startDayOffset = (firstDayOfMonth + 6) % 7; // Align Monday as 0, Sunday as 6
 
-    const days = [];
+    const days: JSX.Element[] = [];
 
     // Fill in the blank days before the first day of the month
     for (let i = 0; i < startDayOffset; i++) {
@@ -79,13 +75,11 @@ function Calendar({ startDate, endDate, onDateChange }: CalendarProps) {
         <button onClick={() => handleMonthChange(1)}>&gt;</button>
       </div>
       <div className={styles.weekdayLabels}>
-        {daysOfWeek.map(function (day, index) {
-          return (
-            <div key={index} className={styles.weekdayLabel}>
-              {day}
-            </div>
-          );
-        })}
+        {daysOfWeek.map((day, index) => (
+          <div key={index} className={styles.weekdayLabel}>
+            {day}
+          </div>
+        ))}
       </div>
       <div className={styles.calendarGrid}>{renderDays}</div>
     </div>
