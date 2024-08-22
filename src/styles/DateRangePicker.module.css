@@ -1,0 +1,136 @@
+/* src/styles/DateRangePicker.module.css */
+
+.dateRangePicker {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: #2c2f33;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    color: white;
+  }
+  
+  .calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .calendarHeader button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .calendarHeader button:hover {
+    background-color: #555;
+    transform: scale(1.05);
+  }
+  
+  .calendarHeader span {
+    font-weight: bold;
+    font-size: 1.3em;
+  }
+  
+  .weekdayLabels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .weekdayLabel {
+    padding: 10px 0;
+    text-align: center;
+    font-weight: bold;
+    color: #bfc7d5;
+    font-size: 1.1em;
+  }
+  
+  .calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    width: 100%;
+  }
+  
+  .day {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #42454a;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .day:hover {
+    background-color: #4b4e53;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .weekend {
+    color: #e74c3c;
+    background-color: #2c2f33; /* Matches the container background for consistency */
+    border: 1px solid #e74c3c;
+  }
+  
+  .selected {
+    background-color: #1abc9c;
+    color: white;
+  }
+  
+  .day.selected:hover {
+    background-color: #16a085;
+  }
+  
+  .predefined-ranges {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Ensures buttons wrap if they don't fit in one row */
+  }
+  
+  .predefined-ranges button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .predefined-ranges button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .predefined-ranges button:focus {
+    outline: none;
+    background-color: #1e6fa0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+  
