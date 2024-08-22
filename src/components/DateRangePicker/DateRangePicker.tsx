@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Calendar from './Calendar';
 import { getWeekendDatesInRange, formatDate } from '../../utils/dateUtils';
 import styles from '../../styles/DateRangePicker.module.css';
@@ -19,7 +19,7 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
   const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
 
-  const handleDateChange = (date: Date, predefinedRange?: [Date, Date]) => {
+  const handleDateChange = useCallback((date: Date, predefinedRange?: [Date, Date]) => {
     if (predefinedRange) {
       setStartDate(predefinedRange[0]);
       setEndDate(predefinedRange[1]);
@@ -31,23 +31,27 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
       if (!startDate || (startDate && endDate)) {
         setStartDate(date);
         setEndDate(null);
-      } else if (startDate && !endDate) {
-        if (date >= startDate) {
-          setEndDate(date);
-          const weekendDates = getWeekendDatesInRange(startDate, date);
-          onChange([startDate, date], weekendDates);
-        } else {
-          setStartDate(date);
-          setEndDate(null);
-        }
+      } else if (startDate && !endDate && date >= startDate) {
+        setEndDate(date);
+        const weekendDates = getWeekendDatesInRange(startDate, date);
+        onChange([startDate, date], weekendDates);
+      } else {
+        setStartDate(date);
+        setEndDate(null);
       }
     }
-  };
+  }, [startDate, endDate, onChange]);
 
-  const handleMonthYearChange = (month: number, year: number) => {
+  const handleMonthYearChange = useCallback((month: number, year: number) => {
     setCurrentMonth(month);
     setCurrentYear(year);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (startDate && endDate && endDate < startDate) {
+      setEndDate(null);
+    }
+  }, [startDate, endDate]);
 
   return (
     <div>
@@ -64,7 +68,11 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
         />
         <div className={styles.predefinedRanges}>
           {predefinedRanges.map((range, index) => (
-            <button key={index} onClick={() => handleDateChange(range.range[0], range.range)}>
+            <button 
+              key={index} 
+              onClick={() => handleDateChange(range.range[0], range.range)}
+              className={styles.predefinedRangeButton}
+            >
               {range.label}
             </button>
           ))}

@@ -9,7 +9,7 @@ export function daysInMonth(month: number, year: number): number {
 
 export function getWeekendDatesInRange(startDate: Date, endDate: Date): Date[] {
   const dates: Date[] = [];
-  const currentDate = new Date(startDate);
+  let currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
     if (isWeekend(currentDate)) {

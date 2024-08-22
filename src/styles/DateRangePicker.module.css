@@ -1,27 +1,37 @@
-/* src/styles/DateRangePicker.module.css */
-
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+:root {
+  --primary-color: #1abc9c;
+  --primary-color-dark: #16a085;
+  --text-color: #34495e;
+  --weekend-color: #e74c3c;
+  --background-color: #ffffff;
+  --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --transition: 0.3s ease;
+  --font-family: "Roboto", sans-serif;
+}
 
 .header {
   font-size: 28px;
   font-weight: bold;
-  color: #34495e;
+  color: var(--text-color);
   text-align: center;
   margin-bottom: 20px;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-family);
 }
 
 .dateRangePicker {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--background-color);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  max-width: 370px; /* Increased width slightly to fit the grid */
+  box-shadow: var(--box-shadow);
+  max-width: 370px;
   margin: 0 auto;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-family);
 }
 
 .calendar {
@@ -40,24 +50,26 @@
 }
 
 .calendarHeader button {
-  background-color: #1abc9c;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: 8px 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color var(--transition), transform 0.2s ease;
 }
 
-.calendarHeader button:hover {
-  background-color: #16a085;
+.calendarHeader button:hover,
+.calendarHeader button:focus {
+  background-color: var(--primary-color-dark);
   transform: translateY(-2px);
+  outline: none;
 }
 
 .calendarHeader span {
   font-weight: 500;
   font-size: 18px;
-  color: #34495e;
+  color: var(--text-color);
 }
 
 .weekdayLabels {
@@ -67,7 +79,7 @@
   width: 100%;
   text-align: center;
   font-weight: 500;
-  color: #34495e;
+  color: var(--text-color);
   margin-bottom: 10px;
   font-size: 16px;
 }
@@ -81,35 +93,36 @@
 
 .day {
   padding: 12px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   text-align: center;
   user-select: none;
-  background-color: #ffffff;
+  background-color: var(--background-color);
   border: 1px solid #ecf0f1;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease,
+  transition: background-color var(--transition), transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 
-.day:hover {
+.day:hover,
+.day:focus {
   background-color: #f2f6f9;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  outline: none;
 }
 
 .weekend {
-  color: #e74c3c;
-  border-color: #e74c3c;
+  color: var(--weekend-color);
+  border-color: var(--weekend-color);
 }
 
 .selected {
-  background-color: #1abc9c; /* The color you want for selected dates */
+  background-color: var(--primary-color);
   color: white;
-  border: 2px solid #16a085;
+  border: 2px solid var(--primary-color-dark);
   transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
 
 .predefinedRanges {
   display: flex;
@@ -119,28 +132,30 @@
 }
 
 .predefinedRanges button {
-  background-color: #1abc9c;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color var(--transition), transform 0.2s ease;
   flex: 1;
   margin: 0 5px;
   font-size: 14px;
   font-weight: 500;
 }
 
-.predefinedRanges button:hover {
-  background-color: #16a085;
+.predefinedRanges button:hover,
+.predefinedRanges button:focus {
+  background-color: var(--primary-color-dark);
   transform: translateY(-2px);
+  outline: none;
 }
 
 .selectedRange {
   margin-top: 20px;
   font-weight: 500;
-  color: #34495e;
+  color: var(--text-color);
   font-size: 16px;
   text-align: center;
 }
