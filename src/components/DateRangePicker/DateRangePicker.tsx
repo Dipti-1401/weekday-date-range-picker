@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Calendar from './Calendar';
-import { getWeekendDatesInRange, formatDate } from '../../utils/dateUtils';
-import styles from '../../styles/DateRangePicker.module.css';
+import React, { useState, useEffect } from "react";
+import Calendar from "./Calendar";
+import { getWeekendDatesInRange, formatDate } from "../../utils/dateUtils";
+import styles from "../../styles/DateRangePicker.module.css";
 
 interface PredefinedRange {
   label: string;
@@ -13,45 +13,58 @@ interface DateRangePickerProps {
   onChange: (selectedRange: [Date, Date], weekendDates: Date[]) => void;
 }
 
+// Helper function to normalize the date
+const normalizeDate = (date: Date): Date => {
+  const normalized = new Date(date);
+  normalized.setHours(0, 0, 0, 0);
+  return normalized;
+};
+
 function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
+  const [currentMonth, setCurrentMonth] = useState<number>(
+    new Date().getMonth()
+  );
+  const [currentYear, setCurrentYear] = useState<number>(
+    new Date().getFullYear()
+  );
 
-  const handleDateChange = useCallback((date: Date, predefinedRange?: [Date, Date]) => {
+  const handleDateChange = (date: Date, predefinedRange?: [Date, Date]) => {
+    const normalizedDate = normalizeDate(date);
+
     if (predefinedRange) {
-      setStartDate(predefinedRange[0]);
-      setEndDate(predefinedRange[1]);
-      setCurrentMonth(predefinedRange[0].getMonth());
-      setCurrentYear(predefinedRange[0].getFullYear());
-      const weekendDates = getWeekendDatesInRange(predefinedRange[0], predefinedRange[1]);
-      onChange(predefinedRange, weekendDates);
+      const [start, end] = predefinedRange.map(normalizeDate);
+      const weekendDates = getWeekendDatesInRange(start, end);
+      onChange([start, end], weekendDates);
+      setStartDate(start);
+      setEndDate(end);
+      setCurrentMonth(start.getMonth());
+      setCurrentYear(start.getFullYear());
     } else {
       if (!startDate || (startDate && endDate)) {
-        setStartDate(date);
+        setStartDate(normalizedDate);
         setEndDate(null);
-      } else if (startDate && !endDate && date >= startDate) {
-        setEndDate(date);
-        const weekendDates = getWeekendDatesInRange(startDate, date);
-        onChange([startDate, date], weekendDates);
-      } else {
-        setStartDate(date);
-        setEndDate(null);
+      } else if (startDate && !endDate) {
+        if (normalizedDate >= startDate) {
+          const weekendDates = getWeekendDatesInRange(
+            startDate,
+            normalizedDate
+          );
+          setEndDate(normalizedDate);
+          onChange([startDate, normalizedDate], weekendDates);
+        } else {
+          setStartDate(normalizedDate);
+          setEndDate(null);
+        }
       }
     }
-  }, [startDate, endDate, onChange]);
+  };
 
-  const handleMonthYearChange = useCallback((month: number, year: number) => {
+  const handleMonthYearChange = (month: number, year: number) => {
     setCurrentMonth(month);
     setCurrentYear(year);
-  }, []);
-
-  useEffect(() => {
-    if (startDate && endDate && endDate < startDate) {
-      setEndDate(null);
-    }
-  }, [startDate, endDate]);
+  };
 
   return (
     <div>
@@ -68,10 +81,9 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
         />
         <div className={styles.predefinedRanges}>
           {predefinedRanges.map((range, index) => (
-            <button 
-              key={index} 
+            <button
+              key={index}
               onClick={() => handleDateChange(range.range[0], range.range)}
-              className={styles.predefinedRangeButton}
             >
               {range.label}
             </button>

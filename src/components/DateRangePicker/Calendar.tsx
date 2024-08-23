@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
-import { isWeekend, daysInMonth } from '../../utils/dateUtils';
-import styles from '../../styles/DateRangePicker.module.css';
+import React from "react";
+import { isWeekend, daysInMonth, resetTime, normalizeDate } from "../../utils/dateUtils";
+import Day from "./Day";
+import styles from "../../styles/DateRangePicker.module.css";
 
 interface CalendarProps {
   startDate: Date | null;
@@ -19,55 +20,49 @@ function Calendar({
   currentYear,
   onMonthYearChange,
 }: CalendarProps) {
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  const isSelected = useCallback(
-    (date: Date) => {
-      if (!startDate) return false;
-      if (endDate) {
-        return date >= startDate && date <= endDate;
-      }
-      return date.getTime() === startDate.getTime();
-    },
-    [startDate, endDate]
-  );
+  function isSelected(date: Date) {
+    if (!startDate) return false;
+    const normalizedDate = normalizeDate(date);
+    if (endDate) {
+      return normalizedDate >= normalizeDate(startDate) && normalizedDate <= normalizeDate(endDate);
+    }
+    return normalizedDate.getTime() === normalizeDate(startDate).getTime();
+  }
+  
 
-  const renderDay = useCallback(
-    (day: number, offset: number) => {
-      const date = new Date(currentYear, currentMonth, day);
-      const isCurrentDaySelected = isSelected(date);
-
-      return (
-        <div
-          key={day + offset}
-          className={`${styles.day} ${
-            isWeekend(date) ? styles.weekend : ''
-          } ${isCurrentDaySelected ? styles.selected : ''}`}
-          onClick={() => !isWeekend(date) && onDateChange(date)}
-          style={{ cursor: isWeekend(date) ? 'not-allowed' : 'pointer' }}
-        >
-          {day}
-        </div>
-      );
-    },
-    [currentYear, currentMonth, onDateChange, isSelected]
-  );
-
-  const renderDays = useCallback(() => {
+  function renderDays() {
     const numberOfDays = daysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const startDayOffset = (firstDayOfMonth + 6) % 7;
 
-    const days: JSX.Element[] = [];
+    const days = [];
     for (let i = 0; i < startDayOffset; i++) {
       days.push(<div key={`blank-${i}`} className={styles.day}></div>);
     }
 
     for (let i = 1; i <= numberOfDays; i++) {
-      days.push(renderDay(i, startDayOffset));
+      const date = new Date(currentYear, currentMonth, i);
+      date.setHours(0, 0, 0, 0); // Normalize date before comparison
+
+      const isCurrentDaySelected = isSelected(date);
+
+      days.push(
+        <div
+          key={i}
+          className={`${styles.day} ${isWeekend(date) ? styles.weekend : ""} ${
+            isCurrentDaySelected ? styles.selected : ""
+          }`}
+          onClick={() => !isWeekend(date) && onDateChange(date)}
+          style={{ cursor: isWeekend(date) ? "not-allowed" : "pointer" }}
+        >
+          {i}
+        </div>
+      );
     }
     return days;
-  }, [currentMonth, currentYear, renderDay]);
+  }
 
   return (
     <div className={styles.calendar}>
