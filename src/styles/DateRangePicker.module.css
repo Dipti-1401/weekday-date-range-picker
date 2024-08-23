@@ -1,25 +1,47 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
+:root {
+  --primary-color: #1abc9c;
+  --primary-color-dark: #16a085;
+  --secondary-color: #34495e;
+  --accent-color: #e74c3c;
+  --background-color: #ffffff;
+  --hover-background: #f2f6f9;
+  --border-color: #ecf0f1;
+  --font-family-base: "Roboto", sans-serif;
+  --font-size-base: 16px;
+  --font-size-large: 18px;
+  --font-size-header: 28px;
+  --font-weight-base: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --box-shadow-base: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --box-shadow-large: 0 8px 20px rgba(0, 0, 0, 0.1);
+  --border-radius-base: 8px;
+  --border-radius-large: 12px;
+  --transition-base: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .header {
-  font-size: 28px;
-  font-weight: bold;
-  color: #34495e;
+  font-size: var(--font-size-header);
+  font-weight: var(--font-weight-bold);
+  color: var(--secondary-color);
   text-align: center;
   margin-bottom: 20px;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-family-base);
 }
 
 .dateRangePicker {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--background-color);
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  max-width: 370px; /* Increased width slightly to fit the grid */
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--box-shadow-large);
+  max-width: 370px;
   margin: 0 auto;
-  font-family: "Roboto", sans-serif;
+  font-family: var(--font-family-base);
 }
 
 .calendar {
@@ -38,24 +60,24 @@
 }
 
 .calendarHeader button {
-  background-color: #1abc9c;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--background-color);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-base);
   padding: 8px 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .calendarHeader button:hover {
-  background-color: #16a085;
+  background-color: var(--primary-color-dark);
   transform: translateY(-2px);
 }
 
 .calendarHeader span {
-  font-weight: 500;
-  font-size: 18px;
-  color: #34495e;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-large);
+  color: var(--secondary-color);
 }
 
 .weekdayLabels {
@@ -64,10 +86,10 @@
   gap: 10px;
   width: 100%;
   text-align: center;
-  font-weight: 500;
-  color: #34495e;
+  font-weight: var(--font-weight-medium);
+  color: var(--secondary-color);
   margin-bottom: 10px;
-  font-size: 16px;
+  font-size: var(--font-size-base);
 }
 
 .calendarGrid {
@@ -79,33 +101,32 @@
 
 .day {
   padding: 12px;
-  border-radius: 8px;
+  border-radius: var(--border-radius-base);
   text-align: center;
   user-select: none;
-  background-color: #ffffff;
-  border: 1px solid #ecf0f1;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .day:hover {
-  background-color: #f2f6f9;
+  background-color: var(--hover-background);
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow-base);
 }
 
 .weekend {
-  color: #e74c3c;
-  border-color: #e74c3c;
+  color: var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 .selected {
-  background-color: #1abc9c; /* The color you want for selected dates */
-  color: white;
-  border: 2px solid #16a085;
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  border: 2px solid var(--primary-color-dark);
   transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow-base);
 }
 
 .predefinedRanges {
@@ -116,28 +137,28 @@
 }
 
 .predefinedRanges button {
-  background-color: #1abc9c;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--background-color);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-base);
   padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: var(--transition-base);
   flex: 1;
   margin: 0 5px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .predefinedRanges button:hover {
-  background-color: #16a085;
+  background-color: var(--primary-color-dark);
   transform: translateY(-2px);
 }
 
 .selectedRange {
   margin-top: 20px;
-  font-weight: 500;
-  color: #34495e;
-  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--secondary-color);
+  font-size: var(--font-size-base);
   text-align: center;
 }

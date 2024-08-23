@@ -28,19 +28,13 @@ export function resetTime(date: Date): Date {
 }
 
 export function formatDate(date: Date): string {
-  const normalizedDate = new Date(date.getTime());
-  normalizedDate.setHours(0, 0, 0, 0);
-  return normalizedDate.toISOString().split('T')[0];
+  return resetTime(date).toISOString().split('T')[0];
 }
 
-export const normalizeDate = (date: Date): Date => {
-  const normalized = new Date(date);
-  normalized.setHours(0, 0, 0, 0);
-  return normalized;
-};
+export function normalizeDate(date: Date): Date {
+  return resetTime(date);
+}
 
 export function formatDateForDisplay(date: Date): string {
-  return date.toISOString().split('T')[0];  // Or use a more user-friendly format
+  return formatDate(date);
 }
-
-
