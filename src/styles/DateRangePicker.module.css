@@ -162,3 +162,15 @@
   font-size: var(--font-size-base);
   text-align: center;
 }
+
+.dropdown {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+

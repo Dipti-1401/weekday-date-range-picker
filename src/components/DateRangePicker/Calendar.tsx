@@ -1,6 +1,5 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { isWeekend, daysInMonth, normalizeDate } from "../../utils/dateUtils";
-import Day from "./Day";
 import styles from "../../styles/DateRangePicker.module.css";
 
 interface CalendarProps {
@@ -22,31 +21,26 @@ function Calendar({
 }: CalendarProps) {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  const isSelected = useCallback(
-    (date: Date) => {
-      if (!startDate) return false;
-      const normalizedDate = normalizeDate(date);
-      if (endDate) {
-        return (
-          normalizedDate >= normalizeDate(startDate) &&
-          normalizedDate <= normalizeDate(endDate)
-        );
-      }
-      return normalizedDate.getTime() === normalizeDate(startDate).getTime();
-    },
-    [startDate, endDate]
-  );
+  function isSelected(date: Date) {
+    if (!startDate) return false;
+    const normalizedDate = normalizeDate(date);
+    if (endDate) {
+      return (
+        normalizedDate >= normalizeDate(startDate) &&
+        normalizedDate <= normalizeDate(endDate)
+      );
+    }
+    return normalizedDate.getTime() === normalizeDate(startDate).getTime();
+  }
 
-  const renderDays = useCallback(() => {
+  function renderDays() {
     const numberOfDays = daysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const startDayOffset = (firstDayOfMonth + 6) % 7;
 
-    const days: JSX.Element[] = [];
+    const days = [];
     for (let i = 0; i < startDayOffset; i++) {
-      days.push(
-        <div key={`blank-${i}`} className={styles.day} aria-hidden="true"></div>
-      );
+      days.push(<div key={`blank-${i}`} className={styles.day}></div>);
     }
 
     for (let i = 1; i <= numberOfDays; i++) {
@@ -54,47 +48,46 @@ function Calendar({
       const isCurrentDaySelected = isSelected(date);
 
       days.push(
-        <Day
+        <div
           key={i}
-          date={date}
-          isSelected={isCurrentDaySelected}
-          isWeekend={isWeekend(date)}
+          className={`${styles.day} ${isWeekend(date) ? styles.weekend : ""} ${
+            isCurrentDaySelected ? styles.selected : ""
+          }`}
           onClick={() => !isWeekend(date) && onDateChange(date)}
-        />
+          style={{ cursor: isWeekend(date) ? "not-allowed" : "pointer" }}
+        >
+          {i}
+        </div>
       );
     }
     return days;
-  }, [currentMonth, currentYear, isSelected, onDateChange]);
+  }
 
   return (
-    <div className={styles.calendar} role="grid">
+    <div className={styles.calendar}>
       <div className={styles.calendarHeader}>
         <button
           onClick={() => onMonthYearChange(currentMonth - 1, currentYear)}
-          aria-label="Previous month"
         >
           &lt;
         </button>
-        <span aria-live="polite">{`${currentMonth + 1} / ${currentYear}`}</span>
+        <span>{`${currentMonth + 1} / ${currentYear}`}</span>
         <button
           onClick={() => onMonthYearChange(currentMonth + 1, currentYear)}
-          aria-label="Next month"
         >
           &gt;
         </button>
       </div>
-      <div className={styles.weekdayLabels} role="row">
+      <div className={styles.weekdayLabels}>
         {daysOfWeek.map((day, index) => (
-          <div key={index} className={styles.weekdayLabel} role="columnheader">
+          <div key={index} className={styles.weekdayLabel}>
             {day}
           </div>
         ))}
       </div>
-      <div className={styles.calendarGrid} role="rowgroup">
-        {renderDays()}
-      </div>
+      <div className={styles.calendarGrid}>{renderDays()}</div>
     </div>
   );
 }
 
-export default React.memo(Calendar);
+export default Calendar;

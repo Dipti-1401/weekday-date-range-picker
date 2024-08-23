@@ -3,7 +3,7 @@ import Calendar from "./Calendar";
 import {
   getWeekendDatesInRange,
   formatDate,
-  normalizeDate,
+  resetTime,
 } from "../../utils/dateUtils";
 import styles from "../../styles/DateRangePicker.module.css";
 
@@ -29,10 +29,10 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
 
   const handleDateChange = useCallback(
     (date: Date, predefinedRange?: [Date, Date]) => {
-      const normalizedDate = normalizeDate(date);
+      const normalizedDate = resetTime(date);
 
       if (predefinedRange) {
-        const [start, end] = predefinedRange.map(normalizeDate);
+        const [start, end] = predefinedRange.map(resetTime);
         const weekendDates = getWeekendDatesInRange(start, end);
         onChange([start, end], weekendDates);
         setStartDate(start);
@@ -45,11 +45,11 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
           setEndDate(null);
         } else if (startDate && !endDate) {
           if (normalizedDate >= startDate) {
+            setEndDate(normalizedDate);
             const weekendDates = getWeekendDatesInRange(
               startDate,
               normalizedDate
             );
-            setEndDate(normalizedDate);
             onChange([startDate, normalizedDate], weekendDates);
           } else {
             setStartDate(normalizedDate);
@@ -61,15 +61,46 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
     [startDate, endDate, onChange]
   );
 
-  const handleMonthYearChange = useCallback((month: number, year: number) => {
+  const handleMonthYearChange = (month: number, year: number) => {
+    if (month < 0) {
+      month = 11;
+      year -= 1;
+    } else if (month > 11) {
+      month = 0;
+      year += 1;
+    }
     setCurrentMonth(month);
     setCurrentYear(year);
-  }, []);
+  };
+
+  const handlePredefinedRangeChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedRange = predefinedRanges.find(
+      (range) => range.label === e.target.value
+    );
+    if (selectedRange) {
+      handleDateChange(selectedRange.range[0], selectedRange.range);
+    }
+  };
 
   return (
     <div>
       <h1 className={styles.header}>Date Range Picker</h1>
       <div className={styles.dateRangePicker}>
+        <div className={styles.predefinedRanges}>
+          <select
+            onChange={handlePredefinedRangeChange}
+            className={styles.dropdown}
+          >
+            <option value="">Select a Range</option>
+            {predefinedRanges.map((range, index) => (
+              <option key={index} value={range.label}>
+                {range.label}
+              </option>
+            ))}
+          </select>
+        </div>
         <h2>Select Weekday Date Range</h2>
         <Calendar
           startDate={startDate}
@@ -79,19 +110,8 @@ function DateRangePicker({ predefinedRanges, onChange }: DateRangePickerProps) {
           currentYear={currentYear}
           onMonthYearChange={handleMonthYearChange}
         />
-        <div className={styles.predefinedRanges}>
-          {predefinedRanges.map((range, index) => (
-            <button
-              key={index}
-              onClick={() => handleDateChange(range.range[0], range.range)}
-              aria-label={`Select ${range.label}`}
-            >
-              {range.label}
-            </button>
-          ))}
-        </div>
         {startDate && endDate && (
-          <div className={styles.selectedRange} aria-live="polite">
+          <div className={styles.selectedRange}>
             Selected Range: {formatDate(startDate)} - {formatDate(endDate)}
           </div>
         )}
